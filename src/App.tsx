@@ -1,25 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import { Dashboard } from './components/Dashboard';
+import { Header } from './components/Header';
+import { GlobalStyle } from './styles/global';
+
+import Modal from 'react-modal';
+import { NewTransactionModal } from './components/Modal';
+import { TransactionsProvider } from './hooks/useTransactions';
+
+
+
 
 function App() {
+  const [isNewTransactionModalOpen, setIsNewTransaction] = useState(true);
+
+
+  function handleOpenNewTransactionModal() {
+    setIsNewTransaction(true);
+  }
+
+  function handleCloseNewTransaction() {
+    setIsNewTransaction(false);
+  }
+
+
+  useEffect(() => {
+    setTimeout(() => {
+      const ele = document.getElementById('ipl-progress-indicator')
+      if(ele){
+        // fade out
+        ele.classList.add('available')
+      }
+    }, 2000)
+  
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <TransactionsProvider>
+      <GlobalStyle />
+      <Header handleOpenNewTransactionModal={handleOpenNewTransactionModal} />
+      <NewTransactionModal isOpen={isNewTransactionModalOpen} onRequestClose={handleCloseNewTransaction}  />
+      <Dashboard />
+    </TransactionsProvider>
   );
 }
 
